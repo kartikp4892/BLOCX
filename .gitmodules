@@ -1,0 +1,3 @@
+[submodule "src/autolykos/secp256k1"]
+	path = src/autolykos/secp256k1
+	url = https://github.com/bitcoin-core/secp256k1.git

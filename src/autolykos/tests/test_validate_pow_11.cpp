@@ -50,6 +50,16 @@ void printInt(const std::vector<uint8_t>& hash) {
     std::cout << std::endl;
 }
 
+void printHex(const std::vector<uint8_t>& hash, int num_digits) {
+    for (size_t i = 0; i < hash.size(); ++i) {
+        int8_t signedByte = static_cast<int8_t>(hash[i]);
+        // Convert the signed byte to an unsigned byte for correct hex representation
+        uint8_t byte = static_cast<uint8_t>(signedByte);
+        std::cout << std::hex << std::setw(num_digits) << std::setfill('0') << static_cast<int>(byte);
+    }
+    std::cout << std::endl;
+}
+
 void printHeader(const Header& header) {
     std::cout << "Version: " << static_cast<int>(header.version) << std::endl;
 
@@ -87,7 +97,19 @@ void printHeader(const Header& header) {
 
 //generated solution should be valid
 void test(AutolykosPowScheme& pow, const Header& inHeader) {
+    ErgoNodeViewModifier HeaderToBytes;
+    auto Id = HeaderToBytes.id(inHeader);
+    auto hash_Header = HeaderToBytes.serializedId(inHeader);
+
+    std::cout << "Header: ";
     printHeader(inHeader); 
+
+    std::cout << "Header Id (Option1): ";
+    printHex(Id, 1);
+
+    std::cout << "Header Id (Option2): ";
+    printHex(hash_Header, 2);
+
     pow.validate(inHeader);
 }
 

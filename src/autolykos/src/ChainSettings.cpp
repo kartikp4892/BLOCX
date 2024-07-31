@@ -1,7 +1,7 @@
 #include "includes.h"
 
-ChainSettings::ChainSettings(FiniteDuration blockInterval, int useLastEpochs, const std::string& initialDifficultyHex)
-    : blockInterval(blockInterval), useLastEpochs(useLastEpochs), initialDifficultyHex(initialDifficultyHex) {
+ChainSettings::ChainSettings(FiniteDuration blockInterval, int useLastEpochs, int epochLength, const std::string& initialDifficultyHex)
+    : blockInterval(blockInterval), useLastEpochs(useLastEpochs), epochLength(epochLength), initialDifficultyHex(initialDifficultyHex) {
     initialDifficulty = decodeHexToBigInt(initialDifficultyHex);
 }
 
@@ -17,3 +17,4 @@ cpp_int ChainSettings::decodeHexToBigInt(const std::string& hex) const {
         throw std::runtime_error("Failed to parse initialDifficultyHex: " + hex);
     }
 }
+

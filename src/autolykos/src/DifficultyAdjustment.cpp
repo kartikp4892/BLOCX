@@ -1,6 +1,6 @@
 #include "includes.h"
 
-const DifficultyAdjustment::BigInt DifficultyAdjustment::PrecisionConstant = DifficultyAdjustment::BigInt(1000000000);
+const BigInt DifficultyAdjustment::PrecisionConstant = BigInt(1000000000);
 
 DifficultyAdjustment::DifficultyAdjustment(const ChainSettings& chainSettings)
     : chainSettings(chainSettings),
@@ -116,15 +116,15 @@ std::vector<Height> DifficultyAdjustment::heightsForNextRecalculation(Height hei
 //    );
 //}
 
-DifficultyAdjustment::BigInt DifficultyAdjustment::interpolate(const std::vector<std::pair<int, difficulty>>& data, int epochLength) const {
+BigInt DifficultyAdjustment::interpolate(const std::vector<std::pair<int, difficulty>>& data, int epochLength) const {
     if (data.size() == 1) {
         return data.front().second;
     }
 
-    DifficultyAdjustment::BigInt xySum = 0;
-    DifficultyAdjustment::BigInt x2Sum = 0;
-    DifficultyAdjustment::BigInt ySum = 0;
-    DifficultyAdjustment::BigInt xSum = 0;
+    BigInt xySum = 0;
+    BigInt x2Sum = 0;
+    BigInt ySum = 0;
+    BigInt xSum = 0;
     size_t size = data.size();
 
     for (const auto& [x, y] : data) {
@@ -134,8 +134,8 @@ DifficultyAdjustment::BigInt DifficultyAdjustment::interpolate(const std::vector
         xSum += x;
     }
 
-    DifficultyAdjustment::BigInt b = (xySum * size - xSum * ySum) * PrecisionConstant / (x2Sum * size - xSum * xSum);
-    DifficultyAdjustment::BigInt a = (ySum * PrecisionConstant - b * xSum) / size / PrecisionConstant;
+    BigInt b = (xySum * size - xSum * ySum) * PrecisionConstant / (x2Sum * size - xSum * xSum);
+    BigInt a = (ySum * PrecisionConstant - b * xSum) / size / PrecisionConstant;
 
     int point = data.back().first + epochLength;
     return a + b * point / PrecisionConstant;

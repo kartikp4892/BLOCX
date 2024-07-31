@@ -5,12 +5,12 @@
 
 using Height = int;
 using Timestamp = uint64_t;
+using BigInt = boost::multiprecision::cpp_int; 
+using difficulty = BigInt;
 
 class DifficultyAdjustment {
 public:
-    using BigInt = boost::multiprecision::cpp_int; 
-    using difficulty = BigInt;
-    static const BigInt PrecisionConstant;
+    static const boost::multiprecision::cpp_int PrecisionConstant;
 
     DifficultyAdjustment(const ChainSettings& chainSettings);
 

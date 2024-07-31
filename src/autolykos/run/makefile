@@ -13,7 +13,7 @@ SECP256K1_DIR=/usr/local
 # Define C++ compiler and flags
 CXX=g++
 CXXFLAGS=-std=c++17 -I$(BOOST_DIR)/include -I$(SECP256K1_DIR)/include
-LDFLAGS=-L$(BOOST_DIR)/lib -lboost_system -L$(SECP256K1_DIR)/lib -lsecp256k1 -lssl -lcrypto -Wl,-rpath,$(SECP256K1_DIR)/lib
+LDFLAGS=-L$(BOOST_DIR)/lib -lboost_system -L$(SECP256K1_DIR)/lib -lsecp256k1 -lcrypto -Wl,-rpath,$(SECP256K1_DIR)/lib
 
 # Target to clean and run the executable
 .PHONY: clean_run

@@ -3,7 +3,7 @@
 TEST=test_validate_pow_1
 
 # Define the C++ source files and output executable
-SOURCES=../src/AutolykosPowScheme.cpp ../src/DifficultySerializer.cpp ../src/HeaderSerializer.cpp ../src/NumericHash.cpp ../src/Writer.cpp ../src/core.cpp ../src/mining.cpp ../src/CryptoFacade.cpp ../src/AutolykosSolution.cpp ../src/ErgoNodeViewModifier.cpp ../src/blake2/blake2b.c ../tests/$(TEST).cpp
+SOURCES=../src/AutolykosPowScheme.cpp ../src/DifficultySerializer.cpp ../src/HeaderSerializer.cpp ../src/NumericHash.cpp ../src/Writer.cpp ../src/core.cpp ../src/mining.cpp ../src/CryptoFacade.cpp ../src/AutolykosSolution.cpp ../src/ErgoNodeViewModifier.cpp ../src/blake2/blake2b.c ../tests/$(TEST).cpp ../src/ChainSettings.cpp ../src/DifficultyAdjustment.cpp
 EXECUTABLE=main
 
 # Define Boost and secp256k1 installation directories

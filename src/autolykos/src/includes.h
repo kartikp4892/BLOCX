@@ -37,5 +37,7 @@
 #include "HeaderSerializer.h"
 #include "ErgoNodeViewModifier.h"
 #include "AutolykosPowScheme.h"
+#include "ChainSettings.h"
+#include "DifficultyAdjustment.h"
 
 #endif // INCLUDES_H

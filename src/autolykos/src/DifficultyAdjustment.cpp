@@ -128,11 +128,13 @@ BigInt DifficultyAdjustment::interpolate(const std::vector<std::pair<int, diffic
     size_t size = data.size();
 
     for (const auto& [x, y] : data) {
-        xySum += x * y;
-        x2Sum += x * x;
+        BigInt bigX = x; // Convert x to BigInt
+        xySum += bigX * y;
+        x2Sum += bigX * bigX;
         ySum += y;
-        xSum += x;
+        xSum += bigX;
     }
+
 
     BigInt b = (xySum * size - xSum * ySum) * PrecisionConstant / (x2Sum * size - xSum * xSum);
     BigInt a = (ySum * PrecisionConstant - b * xSum) / size / PrecisionConstant;

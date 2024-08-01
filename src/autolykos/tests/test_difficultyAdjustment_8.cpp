@@ -40,7 +40,7 @@ void test(int height, uint64_t timestamp, uint32_t nBits) {
     ChainSettings chainSettings(blockInterval, useLastEpochs, epochLength);
     DifficultyAdjustment difficultyAdjustment(chainSettings);
 
-    std::vector<Height> heights = difficultyAdjustment.previousHeightsRequiredForRecalculation(height, epochLength);
+    std::vector<Height> heights = difficultyAdjustment.previousHeightsRequiredForRecalculation(height * epochLength + 1, epochLength);
 
     // Create a vector of Headers with necessary values
     std::vector<Header> headers = createHeaders(timestamp, nBits, heights);
@@ -51,76 +51,54 @@ void test(int height, uint64_t timestamp, uint32_t nBits) {
     } catch (const std::invalid_argument& e) {
         std::cerr << "Error: " << e.what() << std::endl;
     }
+
+    //Update the height of the header
+    for (size_t i = 0; i < headers.size(); ++i) {
+        headers[i].height = headers[i].height * 2;
+    }
+
+    std::cout << "\nUpdate the height of the header" << std::endl;
+    try {
+        difficulty result = difficultyAdjustment.calculate(headers, epochLength);
+        std::cout << "Normalized difficulty: " << result << std::endl;
+    } catch (const std::invalid_argument& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+    }
 }
 
 int main() {
 
-    int height = 1906076624;
-    uint64_t timestamp = 8922006494203506772;
-    uint32_t nBits = 545259519;
+    int height = 4;
+    uint64_t timestamp = 4679968235236910924;
+    uint32_t nBits = 545258809;
     test(height, timestamp, nBits);
 
     std::cout << std::endl;
 
-    height = 1176961142;
-    timestamp = 7746157938731592608;
-    nBits = 141245033;
+    height = 38;
+    timestamp = 7299026446648792847;
+    nBits = 151027712;
     test(height, timestamp, nBits);
 
     std::cout << std::endl;
 
-    height = 1567422158;
-    timestamp = 2063042879598575213;
-    nBits = 545259519;
+    height = 35;
+    timestamp = 835957171591476358;
+    nBits = 136662632;
     test(height, timestamp, nBits);
 
     std::cout << std::endl;
 
-    height = 1676963357;
-    timestamp = 1655794303025545727;
-    nBits = 545259519;
+    height = 30;
+    timestamp = 1463750476079291394;
+    nBits = 536924076;
     test(height, timestamp, nBits);
 
     std::cout << std::endl;
 
-    height = 626500031;
-    timestamp = 2035907288057740351;
-    nBits = 268480005;
-    test(height, timestamp, nBits);
-
-    std::cout << std::endl;
-
-    height = 987805700;
-    timestamp = 315282339941536388;
-    nBits = 135549186;
-    test(height, timestamp, nBits);
-
-    std::cout << std::endl;
-
-    height = 157009230;
-    timestamp = 2432812312734727082;
-    nBits = 545259519;
-    test(height, timestamp, nBits);
-
-    std::cout << std::endl;
-
-    height = 1444663291;
-    timestamp = 6587073556086796511;
-    nBits = 16908288;
-    test(height, timestamp, nBits);
-
-    std::cout << std::endl;
-
-    height = 184666729;
-    timestamp = 4775706557300038773;
-    nBits = 545259519;
-    test(height, timestamp, nBits);
-
-    std::cout << std::endl;
-
-    height = 626962305;
-    timestamp = 5297340360002127193;
-    nBits = 545259519;
+    height = 5;
+    timestamp = 3186141160021957874;
+    nBits = 403077202;
     test(height, timestamp, nBits);
 
     return 0;

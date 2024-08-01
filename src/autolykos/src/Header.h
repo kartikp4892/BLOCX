@@ -8,7 +8,8 @@ using ModifierId = std::vector<uint8_t>; // Placeholder for actual type
 using ADDigest = std::vector<uint8_t>; // Placeholder for actual type
 using Timestamp = uint64_t; // Assuming timestamp is uint64_t
 using Version = uint8_t; // Assuming version is uint8_t
-using Difficulty = boost::multiprecision::cpp_int; // Assuming difficulty is cpp_int
+using BigInt = boost::multiprecision::cpp_int; 
+using difficulty = BigInt;
 
 class Header {
 public:
@@ -24,6 +25,7 @@ public:
     AutolykosSolution powSolution;
     std::array<uint8_t, 3> votes;
     std::optional<int> sizeOpt;
+    difficulty requiredDifficulty;
     
     // Method to copy powSolution
     void copy(const AutolykosSolution& solution) {
@@ -58,7 +60,8 @@ public:
           extensionRoot(extensionRoot),
           powSolution(powSolution),
           votes(votes),
-          sizeOpt(sizeOpt) {}
+          sizeOpt(sizeOpt),
+          requiredDifficulty(decodeCompactBits(nBits)){}
 };
 
 

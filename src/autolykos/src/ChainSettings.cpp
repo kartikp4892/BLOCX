@@ -7,14 +7,9 @@ ChainSettings::ChainSettings(FiniteDuration blockInterval, int useLastEpochs, in
 
 cpp_int ChainSettings::decodeHexToBigInt(const std::string& hex) const {
     try {
-        std::string decodedHex;
-        boost::algorithm::unhex(hex.begin(), hex.end(), std::back_inserter(decodedHex));
-        cpp_int value;
-        std::istringstream iss(decodedHex);
-        iss >> value;
+        cpp_int value(hex); // cpp_int can directly parse hex string if prefixed with "0x"
         return value;
     } catch (const std::exception& e) {
         throw std::runtime_error("Failed to parse initialDifficultyHex: " + hex);
     }
 }
-

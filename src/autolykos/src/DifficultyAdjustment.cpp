@@ -51,70 +51,70 @@ std::vector<Height> DifficultyAdjustment::heightsForNextRecalculation(Height hei
     return previousHeightsRequiredForRecalculation(nextRecalculationHeight(height, epochLength), epochLength);
 }
 
-//difficulty DifficultyAdjustment::bitcoinCalculate(const std::vector<Header>& previousHeaders, int epochLength) const {
-//    if (previousHeaders.size() < 2) {
-//        throw std::invalid_argument("At least two headers needed for diff recalculation");
-//    }
-//    const Header& start = previousHeaders[previousHeaders.size() - 2];
-//    const Header& end = previousHeaders.back();
-//    return bitcoinCalculate(start, end, epochLength);
-//}
+difficulty DifficultyAdjustment::bitcoinCalculate(const std::vector<Header>& previousHeaders, int epochLength) const {
+    if (previousHeaders.size() < 2) {
+        throw std::invalid_argument("At least two headers needed for diff recalculation");
+    }
+    const Header& start = previousHeaders[previousHeaders.size() - 2];
+    const Header& end = previousHeaders.back();
+    return bitcoinCalculate(start, end, epochLength);
+}
 
-//difficulty DifficultyAdjustment::bitcoinCalculate(const Header& start, const Header& end, int epochLength) const {
-//    return end.requiredDifficulty * desiredInterval * epochLength / (end.timestamp - start.timestamp);
-//}
+difficulty DifficultyAdjustment::bitcoinCalculate(const Header& start, const Header& end, int epochLength) const {
+    return end.requiredDifficulty * desiredInterval * epochLength / (end.timestamp - start.timestamp);
+}
 
-//difficulty DifficultyAdjustment::eip37Calculate(const std::vector<Header>& previousHeaders, int epochLength) const {
-//    if (previousHeaders.size() < 2) {
-//        throw std::invalid_argument("At least two headers needed for diff recalculation");
-//    }
-//    difficulty lastDiff = previousHeaders.back().requiredDifficulty;
-//    difficulty predictiveDiff = calculate(previousHeaders, epochLength);
-//    difficulty limitedPredictiveDiff = (predictiveDiff > lastDiff)
-//        ? std::min(predictiveDiff, lastDiff * 3 / 2)
-//        : std::max(predictiveDiff, lastDiff / 2);
-//
-//    difficulty classicDiff = bitcoinCalculate(previousHeaders, epochLength);
-//    difficulty avg = (classicDiff + limitedPredictiveDiff) / 2;
-//
-//    difficulty uncompressedDiff = (avg > lastDiff)
-//        ? std::min(avg, lastDiff * 3 / 2)
-//        : std::max(avg, lastDiff / 2);
-//
-//    // Perform serialization cycle to normalize resulted difficulty
-//    return DifficultySerializer::decodeCompactBits(
-//        DifficultySerializer::encodeCompactBits(uncompressedDiff)
-//    );
-//}
+difficulty DifficultyAdjustment::eip37Calculate(const std::vector<Header>& previousHeaders, int epochLength) const {
+    if (previousHeaders.size() < 2) {
+        throw std::invalid_argument("At least two headers needed for diff recalculation");
+    }
+    difficulty lastDiff = previousHeaders.back().requiredDifficulty;
+    difficulty predictiveDiff = calculate(previousHeaders, epochLength);
+    difficulty limitedPredictiveDiff = (predictiveDiff > lastDiff)
+        ? min(predictiveDiff, lastDiff * 3 / 2)
+        : max(predictiveDiff, lastDiff / 2);
 
-//difficulty DifficultyAdjustment::calculate(const std::vector<Header>& previousHeaders, int epochLength) const {
-//    if (previousHeaders.empty()) {
-//        throw std::invalid_argument("PreviousHeaders should always contain at least 1 element");
-//    }
-//
-//    if (previousHeaders.size() == 1 || previousHeaders.front().timestamp >= previousHeaders.back().timestamp) {
-//        return previousHeaders.front().requiredDifficulty;
-//    }
-//
-//    std::vector<std::pair<int, difficulty>> data;
-//    for (size_t i = 0; i < previousHeaders.size() - 1; ++i) {
-//        const Header& start = previousHeaders[i];
-//        const Header& end = previousHeaders[i + 1];
-//        if (end.height - start.height != epochLength) {
-//            throw std::invalid_argument("Incorrect heights interval for previous headers");
-//        }
-//        difficulty diff = end.requiredDifficulty * desiredInterval * epochLength / (end.timestamp - start.timestamp);
-//        data.emplace_back(end.height, diff);
-//    }
-//
-//    difficulty diff = interpolate(data, epochLength);
-//    return (diff >= 1) ? diff : initialDifficulty;
-//
-//    // Perform serialization cycle to normalize resulted difficulty
-//    return DifficultySerializer::decodeCompactBits(
-//        DifficultySerializer::encodeCompactBits(uncompressedDiff)
-//    );
-//}
+    difficulty classicDiff = bitcoinCalculate(previousHeaders, epochLength);
+    difficulty avg = (classicDiff + limitedPredictiveDiff) / 2;
+
+    difficulty uncompressedDiff = (avg > lastDiff)
+        ? min(avg, lastDiff * 3 / 2)
+        : max(avg, lastDiff / 2);
+
+    // Perform serialization cycle to normalize resulted difficulty
+    return decodeCompactBits(
+        encodeCompactBits(uncompressedDiff)
+    );
+}
+
+difficulty DifficultyAdjustment::calculate(const std::vector<Header>& previousHeaders, int epochLength) const {
+    if (previousHeaders.empty()) {
+        throw std::invalid_argument("PreviousHeaders should always contain at least 1 element");
+    }
+
+    difficulty uncompressedDiff;
+    if (previousHeaders.size() == 1 || previousHeaders.front().timestamp >= previousHeaders.back().timestamp) {
+        uncompressedDiff = previousHeaders.front().requiredDifficulty;
+    } else {
+        std::vector<std::pair<int, difficulty>> data;
+        for (size_t i = 0; i < previousHeaders.size() - 1; ++i) {
+            const Header& start = previousHeaders[i];
+            const Header& end = previousHeaders[i + 1];
+            if (end.height - start.height != epochLength) {
+                throw std::invalid_argument("Incorrect heights interval for previous headers");
+            }
+            difficulty diff = end.requiredDifficulty * desiredInterval * epochLength / (end.timestamp - start.timestamp);
+            data.emplace_back(end.height, diff);
+        }
+        difficulty diff = interpolate(data, epochLength);
+        uncompressedDiff = (diff >= 1) ? diff : initialDifficulty;
+    }
+
+    // Perform serialization cycle to normalize resulted difficulty
+    return decodeCompactBits(
+        encodeCompactBits(uncompressedDiff)
+    );
+}
 
 BigInt DifficultyAdjustment::interpolate(const std::vector<std::pair<int, difficulty>>& data, int epochLength) const {
     if (data.size() == 1) {

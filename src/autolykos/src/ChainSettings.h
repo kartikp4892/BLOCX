@@ -8,7 +8,7 @@ using FiniteDuration = std::chrono::duration<int64_t, std::milli>;
 
 class ChainSettings {
 public:
-    ChainSettings(FiniteDuration blockInterval, int useLastEpochs, int epochLength, const std::string& initialDifficultyHex = "1a2b3c");
+    ChainSettings(FiniteDuration blockInterval, int useLastEpochs, int epochLength, const std::string& initialDifficultyHex = "01");
 
     FiniteDuration getBlockInterval() const { return blockInterval; }
     int getUseLastEpochs() const { return useLastEpochs; }

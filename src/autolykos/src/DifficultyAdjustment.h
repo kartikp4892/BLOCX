@@ -4,9 +4,6 @@
 #include "includes.h"
 
 using Height = int;
-using Timestamp = uint64_t;
-using BigInt = boost::multiprecision::cpp_int; 
-using difficulty = BigInt;
 
 class DifficultyAdjustment {
 public:
